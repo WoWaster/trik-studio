@@ -29,7 +29,7 @@ macx {
 
 CONFIG *= qt thread exceptions
 
-!win32:CONFIG *= use_gold_linker
+!win32:!contains(QT_ARCH, "riscv64"):CONFIG *= use_gold_linker
 #CONFIG *= fat-lto
 
 #deal with mixed configurations
@@ -122,6 +122,11 @@ equals(TEMPLATE, lib) {
 	}else:macx-clang {
 		QMAKE_LFLAGS *= -Wl,-export_dynamic
 	}
+}
+
+contains(QT_ARCH, "riscv64") {
+	warning("No sanitizers on RISC-V, disabling them")
+	CONFIG += nosanitizers
 }
 
 !nosanitizers:!clang:gcc:*-g++*:gcc4{
